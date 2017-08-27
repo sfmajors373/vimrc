@@ -20,10 +20,22 @@ if has("autocmd")
 endif
 
 if has("autocmd")
-  autocmd BufWritePre *.py,*.js :call <<SID>StripTrailingWhitespaces()
+  autocmd BufWritePre *.py,*.js :call <SID>StripTrailingWhitespaces()
 endif
 
 inoremap {<cr> {<cr>}<c-o>O<tab>
 inoremap [<cr> [<cr>]<c-o>O<tab>
 inoremap (<cr> (<cr>)<c-o>O<tab>
 inoremap ({<cr> ({<cr>})<c-o>O<tab>
+
+function! <SID>StripTrailingWhitespaces()
+    " Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " Do the business:
+    %s/\s\+$//e
+    " Clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
